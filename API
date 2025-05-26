@@ -1,0 +1,163 @@
+**documentação técnica da API REST para o sistema PetDoe**, organizada de forma profissional (padrão Swagger/OpenAPI).
+
+---
+
+## 🐾 API REST – PetDoe
+
+### 🔒 1. **Login**
+
+**Endpoint:** `POST /api/login`
+**Descrição:** Autentica o usuário e retorna um token.
+
+**Parâmetros (JSON):**
+
+```json
+{
+  "email": "usuario@exemplo.com",
+  "senha": "123456"
+}
+```
+
+**Resposta (200 OK):**
+
+```json
+{
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+  "usuario": {
+    "nome": "Maria",
+    "email": "usuario@exemplo.com",
+    "tipo": "tutor"
+  }
+}
+```
+
+---
+
+### 👥 2. **Listar Profissionais (Freelancers)**
+
+**Endpoint:** `GET /api/freelancers`
+**Descrição:** Retorna lista de freelancers disponíveis.
+
+**Parâmetros (Query):**
+
+* `tipo` (ex: `veterinario`, `adestrador`, `pet_sitter`)
+* `cidade` (opcional)
+
+**Resposta (200 OK):**
+
+```json
+[
+  {
+    "nome": "João",
+    "especialidade": "adestrador",
+    "descricao": "Adestrador experiente...",
+    "preco": 90.0
+  },
+  {
+    "nome": "Larissa",
+    "especialidade": "pet_sitter",
+    "preco": 75.0
+  }
+]
+```
+
+---
+
+### 📍 3. **Localizações**
+
+**Endpoint:** `GET /api/localizacoes`
+**Descrição:** Retorna pontos no mapa (ONGs, clínicas, etc.)
+
+**Parâmetros (Query):**
+
+* `categoria`: `ong`, `clinica`, `vacina`, `castramovel`
+* `cidade` (opcional)
+
+**Resposta:**
+
+```json
+[
+  {
+    "nome": "ONG Amigos dos Pets",
+    "categoria": "ong",
+    "latitude": -8.04666,
+    "longitude": -34.877,
+    "endereco": "Recife - PE"
+  }
+]
+```
+
+---
+
+### 📬 4. **Contato**
+
+**Endpoint:** `POST /api/contato`
+**Descrição:** Envia uma mensagem para a equipe.
+
+**Parâmetros (JSON):**
+
+```json
+{
+  "nome": "João Silva",
+  "email": "joao@email.com",
+  "mensagem": "Gostaria de mais informações sobre adoção."
+}
+```
+
+**Resposta:**
+
+```json
+{
+  "mensagem": "Contato enviado com sucesso!"
+}
+```
+
+---
+
+### 💬 5. **Comentários**
+
+**Endpoint:** `GET /api/comentarios`
+**Descrição:** Lista avaliações dos usuários.
+
+**Resposta:**
+
+```json
+[
+  {
+    "nome": "Vitoria dos Santos",
+    "profissao": "Arquiteta",
+    "comentario": "Os serviços de pet sitter são excelentes!"
+  }
+]
+```
+
+---
+
+### 📧 6. **Newsletter**
+
+**Endpoint:** `POST /api/newsletter`
+**Descrição:** Adiciona e-mail à lista de novidades.
+
+**Parâmetros:**
+
+```json
+{
+  "email": "exemplo@email.com"
+}
+```
+
+**Resposta:**
+
+```json
+{
+  "mensagem": "E-mail cadastrado com sucesso!"
+}
+```
+
+---
+
+
+
+Posso montar os **arquivos iniciais do projeto**, **rotas**, ou até um **arquivo Swagger.yaml** se quiser.
+
+Deseja que eu inicie com o código backend? Qual linguagem prefere?
