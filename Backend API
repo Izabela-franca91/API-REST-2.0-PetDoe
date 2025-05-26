@@ -1,0 +1,174 @@
+O backend da **API PetDoe**, aqui está uma versão simples com **Node.js + Express + MongoDB** (uma das stacks mais populares).
+
+* Instalação
+* Estrutura de pastas
+* Código básico para os endpoints que mencionamos
+
+---
+
+## 🛠️ 1. **Pré-requisitos**
+
+* Node.js instalado
+* MongoDB local ou Atlas
+* Postman (opcional para testar)
+
+---
+
+## 📁 2. **Estrutura de Pastas**
+
+```
+petdoe-api/
+├── controllers/
+│   └── authController.js
+│   └── freelancerController.js
+│   └── localizacaoController.js
+├── models/
+│   └── Usuario.js
+│   └── Freelancer.js
+│   └── Localizacao.js
+├── routes/
+│   └── authRoutes.js
+│   └── freelancerRoutes.js
+│   └── localizacaoRoutes.js
+├── .env
+├── app.js
+└── package.json
+```
+
+---
+
+## 📦 3. **Instalação**
+
+```bash
+mkdir petdoe-api && cd petdoe-api
+npm init -y
+npm install express mongoose dotenv cors bcryptjs jsonwebtoken
+```
+
+---
+
+## ⚙️ 4. **Arquivo Principal (`app.js`)**
+
+```js
+const express = require('express');
+const mongoose = require('mongoose');
+const dotenv = require('dotenv');
+const cors = require('cors');
+
+dotenv.config();
+
+const app = express();
+app.use(cors());
+app.use(express.json());
+
+// Rotas
+const authRoutes = require('./routes/authRoutes');
+const freelancerRoutes = require('./routes/freelancerRoutes');
+const localizacaoRoutes = require('./routes/localizacaoRoutes');
+
+app.use('/api', authRoutes);
+app.use('/api', freelancerRoutes);
+app.use('/api', localizacaoRoutes);
+
+// Conexão com MongoDB
+mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
+.then(() => {
+    console.log('Conectado ao MongoDB');
+    app.listen(5000, () => console.log('Servidor rodando na porta 5000'));
+})
+.catch(err => console.error(err));
+```
+
+---
+
+## 🔐 5. **Exemplo de Rota de Login (`authController.js`)**
+
+```js
+const Usuario = require('../models/Usuario');
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+
+exports.login = async (req, res) => {
+  const { email, senha } = req.body;
+  try {
+    const usuario = await Usuario.findOne({ email });
+    if (!usuario) return res.status(404).json({ erro: 'Usuário não encontrado' });
+
+    const match = await bcrypt.compare(senha, usuario.senha);
+    if (!match) return res.status(401).json({ erro: 'Senha inválida' });
+
+    const token = jwt.sign({ id: usuario._id }, process.env.JWT_SECRET, { expiresIn: '1d' });
+
+    res.json({
+      token,
+      usuario: {
+        nome: usuario.nome,
+        email: usuario.email,
+        tipo: usuario.tipo
+      }
+    });
+  } catch (err) {
+    res.status(500).json({ erro: err.message });
+  }
+};
+```
+
+---
+
+## 📘 6. **Modelo de Freelancer (`Freelancer.js`)**
+
+```js
+const mongoose = require('mongoose');
+
+const FreelancerSchema = new mongoose.Schema({
+  nome: String,
+  especialidade: String,
+  descricao: String,
+  preco: Number,
+  cidade: String
+});
+
+module.exports = mongoose.model('Freelancer', FreelancerSchema);
+```
+
+---
+
+## 🌐 7. **Exemplo de Rota de Freelancers (`freelancerRoutes.js`)**
+
+```js
+const express = require('express');
+const router = express.Router();
+const Freelancer = require('../models/Freelancer');
+
+router.get('/freelancers', async (req, res) => {
+  const { tipo, cidade } = req.query;
+  const filtros = {};
+  if (tipo) filtros.especialidade = tipo;
+  if (cidade) filtros.cidade = cidade;
+
+  const lista = await Freelancer.find(filtros);
+  res.json(lista);
+});
+
+module.exports = router;
+```
+
+---
+
+## 🔑 8. **.env**
+
+```
+MONGO_URI=mongodb://localhost:27017/petdoe
+JWT_SECRET=chaveSecreta123
+```
+
+---
+
+## ✅ 9. **Para Rodar**
+
+```bash
+node app.js
+```
+
+---
+
