@@ -172,3 +172,62 @@ node app.js
 
 ---
 
+
+---------------------------------------------
+-  📡 Como o Front se comunica com o Back: 
+
+Ação 
+
+Método 
+
+Endpoint Backend 
+
+O que faz 
+
+Listar freelancers 
+
+GET 
+
+/api/freelancers 
+
+Mostra profissionais 
+
+Agendar um serviço 
+
+POST 
+
+/api/agendamentos 
+
+Envia dados para agendar 
+
+Buscar locais no mapa 
+
+GET 
+
+/api/mapa 
+
+Traz dados de ONGs/clínicas 
+
+Enviar contato 
+
+POST 
+
+/api/contato 
+
+Envia mensagem do usuário 
+
+Mostrar comentários 
+
+GET 
+
+/api/comentarios 
+
+Exibe feedback dos usuários 
+
+🔧 Exemplo com fetch em JS: 
+
+fetch('/api/freelancers') 
+  .then(res => res.json()) 
+  .then(data => { 
+    // Renderiza na tela os profissionais 
+  }); 
